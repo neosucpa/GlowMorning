@@ -1,0 +1,310 @@
+:root {
+    /* Primary Colors */
+    --color-primary: #8B7FDC;        /* 메인 보라 */
+    --color-primary-light: #A599E8;  /* 밝은 보라 */
+    --color-primary-dark: #6B5FBC;   /* 어두운 보라 */
+
+    /* Background Colors */
+    --color-bg-lavender: #E8E4F3;    /* 라벤더 배경 */
+    --color-bg-white: #FFFFFF;       /* 흰색 배경 */
+    --color-bg-light: #F8F7FC;       /* 아주 연한 보라 */
+
+    /* Text Colors */
+    --color-text-primary: #2D2A3E;   /* 메인 텍스트 */
+    --color-text-secondary: #6B6878; /* 보조 텍스트 */
+    --color-text-accent: #8B7FDC;    /* 강조 텍스트 */
+
+    /* Status Colors */
+    --color-success: #4CAF50;
+    --color-error: #FF5252;
+    --color-warning: #FFA726;
+
+    /* Gradients */
+    --gradient-sunrise: linear-gradient(180deg, #2D3E50 0%, #FF9A76 50%, #FFDCB8 100%);
+    --gradient-primary: linear-gradient(135deg, #8B7FDC 0%, #A599E8 100%);
+
+    /* Font Sizes */
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 20px;
+    --font-size-xl: 24px;
+    --font-size-xxl: 32px;
+    --font-size-display: 48px;
+
+    /* Font Weights */
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.8;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-xxl: 48px;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(139, 127, 220, 0.08);
+    --shadow-md: 0 4px 16px rgba(139, 127, 220, 0.12);
+    --shadow-lg: 0 8px 24px rgba(139, 127, 220, 0.16);
+    --shadow-card: 0 2px 12px rgba(139, 127, 220, 0.1);
+
+    /* Safe Area */
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-top: var(--safe-area-top);
+    padding-bottom: var(--safe-area-bottom);
+    overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Common Components */
+
+/* Primary Button */
+.btn-primary {
+    width: 100%;
+    height: 56px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 300ms ease;
+    box-shadow: 0 4px 16px rgba(139, 127, 220, 0.3);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 127, 220, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Toast Message */
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 8px 32px rgba(139, 127, 220, 0.3);
+    min-width: 280px;
+    max-width: 90%;
+    text-align: center;
+    z-index: 2000;
+    animation: toastFadeIn 300ms ease;
+}
+
+@keyframes toastFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.toast-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+}
+
+.toast-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.toast-message {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1500;
+    animation: fadeIn 300ms ease;
+}
+
+.modal {
+    background: white;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: slideUp 300ms ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-header {
+    padding: 24px;
+    border-bottom: 1px solid #E8E4F3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #F8F7FC;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #E8E4F3;
+    display: flex;
+    gap: 12px;
+}
+
+/* Loading Spinner */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #E8E4F3;
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.spinner-text {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+/* App Container for Desktop View */
+@media (min-width: 641px) {
+    #root {
+        max-width: 480px;
+        margin: 0 auto;
+        min-height: 100vh;
+        background-color: white;
+        box-shadow: 0 0 40px rgba(139, 127, 220, 0.2);
+        position: relative;
+    }
+    body {
+        background-color: #f0f2f5;
+    }
+}
