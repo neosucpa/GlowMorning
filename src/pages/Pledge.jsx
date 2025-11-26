@@ -185,7 +185,7 @@ const styles = `
 .pledge-title { font-family: 'KoPub Batang', serif; font-size: 28px; font-weight: 700; color: #2D2A3E; margin-bottom: 16px; }
 .pledge-divider { width: 40px; height: 2px; background: #2D2A3E; margin: 0 auto; }
 .pledge-statement { text-align: center; font-family: 'KoPub Batang', serif; font-size: 16px; color: #555; margin-bottom: 40px; }
-.pledge-section { margin-bottom: 24px; }
+.pledge-section { margin-bottom: 24px; text-align: center; }
 .pledge-label { font-size: 13px; color: #888; margin-bottom: 8px; }
 .pledge-time { font-family: 'KoPub Batang', serif; font-size: 32px; font-weight: 700; color: #2D2A3E; }
 .pledge-subtext { font-size: 13px; color: #888; margin-top: 4px; }
