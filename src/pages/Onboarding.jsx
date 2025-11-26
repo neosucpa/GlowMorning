@@ -45,7 +45,7 @@ const Onboarding = () => {
             onboardingCompleted: true,
             completedAt: new Date().toISOString()
         });
-        navigate('/dashboard');
+        navigate('/pledge');
     };
 
     // Render Steps
@@ -93,7 +93,7 @@ const Step1Welcome = ({ onNext }) => (
             <div className="progress-dots">
                 <span className="dot active"></span>
                 {[...Array(5)].map((_, i) => <span key={i} className="dot"></span>)}
-                <span className="step-counter">1/6</span>
+
             </div>
             <button className="btn-primary" onClick={onNext}>시작하기</button>
         </div>
@@ -146,7 +146,7 @@ const Step2CurrentTime = ({ time, setTime, onNext }) => {
                     <span className="dot"></span>
                     <span className="dot active"></span>
                     {[...Array(4)].map((_, i) => <span key={i} className="dot"></span>)}
-                    <span className="step-counter">2/6</span>
+
                 </div>
                 <button className="btn-primary" onClick={onNext}>다음으로</button>
             </div>
@@ -215,7 +215,7 @@ const Step3TargetTime = ({ target, current, setTime, onNext }) => {
                     <span className="dot"></span>
                     <span className="dot active"></span>
                     {[...Array(3)].map((_, i) => <span key={i} className="dot"></span>)}
-                    <span className="step-counter">3/6</span>
+
                 </div>
                 <button className="btn-primary" onClick={onNext}>다음으로</button>
             </div>
@@ -258,7 +258,7 @@ const Step4Goal = ({ goal, setGoal, onNext }) => {
                     <span className="dot active"></span>
                     <span className="dot"></span>
                     <span className="dot"></span>
-                    <span className="step-counter">4/6</span>
+
                 </div>
                 <button className="btn-primary" onClick={onNext} disabled={!goal}>다음으로</button>
             </div>
@@ -342,7 +342,7 @@ const Step5Theme = ({ theme, setTheme, onNext }) => {
                     {[...Array(4)].map((_, i) => <span key={i} className="dot"></span>)}
                     <span className="dot active"></span>
                     <span className="dot"></span>
-                    <span className="step-counter">5/6</span>
+
                 </div>
                 <button className="btn-primary" onClick={onNext} disabled={!theme}>다음으로</button>
             </div>
@@ -385,7 +385,7 @@ const Step6Sleep = ({ duration, setDuration, targetTime, onNext }) => {
                 <div className="progress-dots">
                     {[...Array(5)].map((_, i) => <span key={i} className="dot"></span>)}
                     <span className="dot active"></span>
-                    <span className="step-counter">6/6</span>
+
                 </div>
                 <button className="btn-primary" onClick={onNext}>시작하기</button>
             </div>
@@ -411,7 +411,7 @@ const styles = `
 .progress-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; align-items: center; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(139, 127, 220, 0.2); transition: all 0.3s; }
 .dot.active { width: 24px; border-radius: 4px; background: var(--color-primary); }
-.step-counter { margin-left: 12px; font-size: 14px; color: var(--color-text-secondary); }
+
 .time-card { background: white; border: 2px solid var(--color-primary); border-radius: 24px; padding: 40px 32px; margin: 40px 0 20px 0; width: 100%; }
 .time-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
 .time-input { width: 80px; font-size: 48px; font-weight: 700; text-align: center; border: none; outline: none; color: var(--color-text-primary); }

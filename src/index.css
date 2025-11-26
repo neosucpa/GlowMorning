@@ -1,18 +1,27 @@
 :root {
     /* Primary Colors */
-    --color-primary: #8B7FDC;        /* 메인 보라 */
-    --color-primary-light: #A599E8;  /* 밝은 보라 */
-    --color-primary-dark: #6B5FBC;   /* 어두운 보라 */
+    --color-primary: #8B7FDC;
+    /* 메인 보라 */
+    --color-primary-light: #A599E8;
+    /* 밝은 보라 */
+    --color-primary-dark: #6B5FBC;
+    /* 어두운 보라 */
 
     /* Background Colors */
-    --color-bg-lavender: #E8E4F3;    /* 라벤더 배경 */
-    --color-bg-white: #FFFFFF;       /* 흰색 배경 */
-    --color-bg-light: #F8F7FC;       /* 아주 연한 보라 */
+    --color-bg-lavender: #E8E4F3;
+    /* 라벤더 배경 */
+    --color-bg-white: #FFFFFF;
+    /* 흰색 배경 */
+    --color-bg-light: #F8F7FC;
+    /* 아주 연한 보라 */
 
     /* Text Colors */
-    --color-text-primary: #2D2A3E;   /* 메인 텍스트 */
-    --color-text-secondary: #6B6878; /* 보조 텍스트 */
-    --color-text-accent: #8B7FDC;    /* 강조 텍스트 */
+    --color-text-primary: #2D2A3E;
+    /* 메인 텍스트 */
+    --color-text-secondary: #6B6878;
+    /* 보조 텍스트 */
+    --color-text-accent: #8B7FDC;
+    /* 강조 텍스트 */
 
     /* Status Colors */
     --color-success: #4CAF50;
@@ -76,7 +85,7 @@
 }
 
 body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'KoPub Batang', 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--color-bg-light);
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
@@ -154,6 +163,7 @@ a {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
@@ -209,6 +219,7 @@ a {
         opacity: 0;
         transform: translateY(40px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -216,8 +227,13 @@ a {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -285,7 +301,9 @@ a {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .spinner-text {
@@ -304,6 +322,7 @@ a {
         box-shadow: 0 0 40px rgba(139, 127, 220, 0.2);
         position: relative;
     }
+
     body {
         background-color: #f0f2f5;
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import BottomNav from '../components/BottomNav';
 import '../index.css';
 
@@ -37,19 +38,24 @@ export const Challenge = () => (
     </PageLayout>
 );
 
-export const Settings = () => (
-    <PageLayout title="설정">
-        <div className="settings-section" style={{ background: 'white', borderRadius: '16px', overflow: 'hidden' }}>
-            <div className="settings-item" style={{ padding: '16px 20px', borderBottom: '1px solid #E8E4F3', display: 'flex', justifyContent: 'space-between' }}>
-                <span>알림 설정</span>
-                <div className="toggle-switch on" style={{ width: '48px', height: '28px', background: 'var(--color-primary)', borderRadius: '14px', position: 'relative' }}>
-                    <div style={{ width: '24px', height: '24px', background: 'white', borderRadius: '50%', position: 'absolute', top: '2px', right: '2px' }}></div>
+export const Settings = () => {
+    const navigate = useNavigate();
+    return (
+        <PageLayout title="설정">
+            <div className="settings-list">
+                <div className="settings-item">
+                    <span>알림 설정</span>
+                    <div className="toggle-switch"></div>
+                </div>
+                <div className="settings-item" onClick={() => navigate('/pledge', { state: { viewMode: true } })} style={{ cursor: 'pointer' }}>
+                    <span>서약서 보기</span>
+                    <span>›</span>
+                </div>
+                <div className="settings-item">
+                    <span>버전 정보</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>v0.1.0</span>
                 </div>
             </div>
-            <div className="settings-item" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between' }}>
-                <span>버전 정보</span>
-                <span style={{ color: 'var(--color-text-secondary)' }}>1.0.0</span>
-            </div>
-        </div>
-    </PageLayout>
-);
+        </PageLayout>
+    );
+};

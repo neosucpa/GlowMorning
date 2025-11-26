@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import BottomNav from '../components/BottomNav';
 import { getTodayStr } from '../utils/dateUtils';
@@ -78,8 +79,44 @@ const Dashboard = () => {
         }
     };
 
+    const location = useLocation(); // Import useLocation
+    const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+
+    useEffect(() => {
+        if (location.state?.showWelcome) {
+            setShowWelcomeModal(true);
+            // Clear state so it doesn't show again on refresh (optional, but good practice)
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
+
     return (
         <div className="dashboard-screen" style={{ paddingBottom: '100px' }}>
+            {/* Welcome Modal */}
+            {showWelcomeModal && (
+                <div className="modal-overlay">
+                    <div className="modal fade-in" style={{ textAlign: 'center', padding: '32px 24px' }}>
+                        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🎉</div>
+                        <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '12px', color: 'var(--color-text-primary)' }}>
+                            환영합니다!
+                        </h2>
+                        <p style={{ fontSize: '16px', color: 'var(--color-text-secondary)', lineHeight: '1.6', marginBottom: '24px' }}>
+                            빛나는 아침을 위한 첫 걸음을<br />
+                            내디디신 것을 축하드려요.<br />
+                            <br />
+                            당신의 작은 약속이<br />
+                            큰 변화를 만들어낼 거예요.
+                        </p>
+                        <button
+                            className="btn-primary"
+                            onClick={() => setShowWelcomeModal(false)}
+                        >
+                            시작하기
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Chapter Header */}
             <div className="chapter-header">
                 <div className="chapter-info">
