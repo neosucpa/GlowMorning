@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { calculateTimeDifference, calculateBedtime } from '../utils/dateUtils';
+import TimePicker24h from '../components/TimePicker24h';
 import morningStretchImg from '../assets/morning_stretch.jpg';
 import '../index.css';
 
@@ -11,10 +12,11 @@ const Onboarding = () => {
     const [step, setStep] = useState(1);
 
     // Temporary state for onboarding inputs
-    const [wakeTime, setWakeTime] = useState({ hours: '08', minutes: '00', period: 'AM' });
-    const [targetTime, setTargetTime] = useState({ hours: '05', minutes: '30', period: 'AM' });
+    // Changed to 24h format (no period)
+    const [wakeTime, setWakeTime] = useState({ hours: '08', minutes: '00' });
+    const [targetTime, setTargetTime] = useState({ hours: '05', minutes: '30' });
     const [goal, setGoal] = useState('');
-    const [theme, setTheme] = useState(null);
+    const [resolution, setResolution] = useState(''); // Changed from theme to resolution
     const [sleepDuration, setSleepDuration] = useState(7);
 
     const totalSteps = 6;
@@ -37,10 +39,10 @@ const Onboarding = () => {
 
     const completeOnboarding = () => {
         updateUserData({
-            currentWakeTime: `${wakeTime.hours}:${wakeTime.minutes} ${wakeTime.period}`,
-            targetWakeTime: `${targetTime.hours}:${targetTime.minutes} ${targetTime.period}`,
+            currentWakeTime: `${wakeTime.hours}:${wakeTime.minutes}`,
+            targetWakeTime: `${targetTime.hours}:${targetTime.minutes}`,
             goal,
-            morningTheme: theme,
+            resolution, // Save resolution
             sleepDuration,
             onboardingCompleted: true,
             completedAt: new Date().toISOString()
@@ -55,7 +57,7 @@ const Onboarding = () => {
             case 2: return <Step2CurrentTime time={wakeTime} setTime={setWakeTime} onNext={nextStep} />;
             case 3: return <Step3TargetTime target={targetTime} current={wakeTime} setTime={setTargetTime} onNext={nextStep} />;
             case 4: return <Step4Goal goal={goal} setGoal={setGoal} onNext={nextStep} />;
-            case 5: return <Step5Theme theme={theme} setTheme={setTheme} onNext={nextStep} />;
+            case 5: return <Step5Resolution resolution={resolution} setResolution={setResolution} onNext={nextStep} />;
             case 6: return <Step6Sleep duration={sleepDuration} setDuration={setSleepDuration} targetTime={targetTime} onNext={completeOnboarding} />;
             default: return null;
         }
@@ -77,7 +79,7 @@ const Onboarding = () => {
 // Step 1: Welcome
 const Step1Welcome = ({ onNext }) => (
     <div className="step-content fade-in">
-        <div className="image-wrapper" style={{ marginBottom: '40px' }}>
+        <div className="image-wrapper" style={{ marginBottom: '20px' }}>
             <img src={morningStretchImg} alt="아침 스트레칭" style={{ width: '100%', borderRadius: '24px', maxHeight: '360px', objectFit: 'cover' }} />
         </div>
         <h2 className="step-title" style={{ fontSize: '24px', marginBottom: '16px' }}>
@@ -102,43 +104,13 @@ const Step1Welcome = ({ onNext }) => (
 
 // Step 2: Current Time
 const Step2CurrentTime = ({ time, setTime, onNext }) => {
-    const handleTimeChange = (field, value) => {
-        setTime(prev => ({ ...prev, [field]: value }));
-    };
-
     return (
         <div className="step-content fade-in" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 className="step-title">먼저 물어볼게요<br />요즘 몇 시쯤 일어나나요?</h2>
 
             <div className="time-card">
                 <div style={{ fontSize: '48px', textAlign: 'center', marginBottom: '24px' }}>⏰</div>
-                <div className="time-input-wrapper">
-                    <input
-                        type="text"
-                        className="time-input"
-                        value={time.hours}
-                        onChange={(e) => handleTimeChange('hours', e.target.value)}
-                        maxLength={2}
-                    />
-                    <span className="time-separator">:</span>
-                    <input
-                        type="text"
-                        className="time-input"
-                        value={time.minutes}
-                        onChange={(e) => handleTimeChange('minutes', e.target.value)}
-                        maxLength={2}
-                    />
-                </div>
-                <div className="am-pm-toggle">
-                    <button
-                        className={`am-pm-btn ${time.period === 'AM' ? 'active' : ''}`}
-                        onClick={() => handleTimeChange('period', 'AM')}
-                    >AM</button>
-                    <button
-                        className={`am-pm-btn ${time.period === 'PM' ? 'active' : ''}`}
-                        onClick={() => handleTimeChange('period', 'PM')}
-                    >PM</button>
-                </div>
+                <TimePicker24h time={time} setTime={setTime} />
             </div>
 
             <div style={{ marginTop: 'auto', width: '100%' }}>
@@ -156,13 +128,9 @@ const Step2CurrentTime = ({ time, setTime, onNext }) => {
 
 // Step 3: Target Time
 const Step3TargetTime = ({ target, current, setTime, onNext }) => {
-    const handleTimeChange = (field, value) => {
-        setTime(prev => ({ ...prev, [field]: value }));
-    };
-
     // Calculate difference logic
-    const currentStr = `${current.hours}:${current.minutes} ${current.period}`;
-    const targetStr = `${target.hours}:${target.minutes} ${target.period}`;
+    const currentStr = `${current.hours}:${current.minutes}`;
+    const targetStr = `${target.hours}:${target.minutes}`;
     const { hours, minutes } = calculateTimeDifference(currentStr, targetStr);
 
     return (
@@ -171,33 +139,7 @@ const Step3TargetTime = ({ target, current, setTime, onNext }) => {
 
             <div className="time-card">
                 <div style={{ fontSize: '48px', textAlign: 'center', marginBottom: '24px' }}>⏰</div>
-                <div className="time-input-wrapper">
-                    <input
-                        type="text"
-                        className="time-input"
-                        value={target.hours}
-                        onChange={(e) => handleTimeChange('hours', e.target.value)}
-                        maxLength={2}
-                    />
-                    <span className="time-separator">:</span>
-                    <input
-                        type="text"
-                        className="time-input"
-                        value={target.minutes}
-                        onChange={(e) => handleTimeChange('minutes', e.target.value)}
-                        maxLength={2}
-                    />
-                </div>
-                <div className="am-pm-toggle">
-                    <button
-                        className={`am-pm-btn ${target.period === 'AM' ? 'active' : ''}`}
-                        onClick={() => handleTimeChange('period', 'AM')}
-                    >AM</button>
-                    <button
-                        className={`am-pm-btn ${target.period === 'PM' ? 'active' : ''}`}
-                        onClick={() => handleTimeChange('period', 'PM')}
-                    >PM</button>
-                </div>
+                <TimePicker24h time={target} setTime={setTime} />
             </div>
 
             <div className="time-difference-card">
@@ -266,73 +208,55 @@ const Step4Goal = ({ goal, setGoal, onNext }) => {
     );
 };
 
-// Step 5: Theme
-const Step5Theme = ({ theme, setTheme, onNext }) => {
-    const [customInput, setCustomInput] = useState(theme?.id === 'custom' ? theme.name : '');
-
-    const themes = [
-        { id: 'thanks', name: '어제의 감사', emoji: '🙏' },
-        { id: 'resolution', name: '오늘의 다짐', emoji: '💪' },
-        { id: 'goal', name: '오늘의 목표', emoji: '🌱' },
-        { id: 'mind', name: '마음의 정리', emoji: '💭' },
+// Step 5: Resolution (New)
+const Step5Resolution = ({ resolution, setResolution, onNext }) => {
+    const presets = [
+        "작은 성취가 쌓여, 더 단단한 나를 만들 거야.",
+        "나와의 약속을 지키며, 나를 믿는 힘을 기른다.",
+        "고요한 새벽, 오롯이 나에게 집중한다.",
+        "비교하지 않고, 묵묵히 나의 길을 걷는다."
     ];
-
-    const handleCustomChange = (e) => {
-        const val = e.target.value;
-        setCustomInput(val);
-        if (val) {
-            setTheme({ id: 'custom', name: val, emoji: '✏️' });
-        } else {
-            setTheme(null);
-        }
-    };
-
-    const handleThemeSelect = (t) => {
-        setCustomInput(t.name);
-        setTheme(t);
-    };
 
     return (
         <div className="step-content fade-in" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h2 className="step-title">아침 기록으로<br />하루를 열어요</h2>
-            <p className="step-subtitle">기상 후 짧은 기록 한 줄은<br />당신의 하루를 빛나게 만들어요</p>
+            <h2 className="step-title" style={{ whiteSpace: 'pre-line' }}>
+                새벽은 누구에게나 오지만,{'\n'}기회는 깨어있는 자에게만 옵니다.
+            </h2>
+            <p className="step-subtitle" style={{ whiteSpace: 'pre-line' }}>
+                매일 아침, 어떤 마음으로 눈을 뜨시겠습니까?{'\n'}당신을 일으켜 세울 한 문장을 정해주세요.
+            </p>
 
-            <div style={{ width: '100%', marginBottom: '20px', marginTop: '40px' }}>
-                <div style={{ fontSize: '18px', fontWeight: '700', marginBottom: '16px', color: 'var(--color-text-primary)', textAlign: 'center' }}>아침 기록 주제 정하기</div>
+            <div style={{ width: '100%', marginBottom: '20px', marginTop: '20px' }}>
                 <input
                     type="text"
-                    placeholder="예: 오늘의 기분"
-                    value={customInput}
-                    onChange={handleCustomChange}
-                    maxLength={20}
+                    placeholder="예: 작은 성취를 쌓아, 더 단단한 나를 만든다."
+                    value={resolution}
+                    onChange={(e) => setResolution(e.target.value)}
+                    maxLength={30}
                     style={{
                         width: '100%',
                         padding: '16px',
                         borderRadius: '12px',
-                        border: `2px solid ${customInput ? 'var(--color-primary)' : '#E8E4F3'}`,
+                        border: `2px solid ${resolution ? 'var(--color-primary)' : '#E8E4F3'}`,
                         fontSize: '16px',
                         outline: 'none',
                         transition: 'all 0.3s'
                     }}
                 />
                 <div style={{ textAlign: 'right', fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-                    {customInput.length}/20
+                    {resolution.length}/30
                 </div>
             </div>
 
-            <div style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '16px' }}>
-                또는 아래 주제 중 선택하세요
-            </div>
-
-            <div className="theme-grid" style={{ width: '100%' }}>
-                {themes.map(t => (
+            <div className="suggestion-chips" style={{ width: '100%' }}>
+                {presets.map((text, i) => (
                     <div
-                        key={t.id}
-                        className={`theme-card ${theme?.id === t.id ? 'selected' : ''}`}
-                        onClick={() => handleThemeSelect(t)}
+                        key={i}
+                        className="suggestion-chip"
+                        onClick={() => setResolution(text)}
+                        style={{ fontSize: '14px', padding: '14px', background: 'white', border: '1px solid #E8E4F3', borderRadius: '12px', marginBottom: '8px', cursor: 'pointer', textAlign: 'left' }}
                     >
-                        <div className="theme-emoji">{t.emoji}</div>
-                        <div className="theme-name">{t.name}</div>
+                        {text}
                     </div>
                 ))}
             </div>
@@ -342,9 +266,8 @@ const Step5Theme = ({ theme, setTheme, onNext }) => {
                     {[...Array(4)].map((_, i) => <span key={i} className="dot"></span>)}
                     <span className="dot active"></span>
                     <span className="dot"></span>
-
                 </div>
-                <button className="btn-primary" onClick={onNext} disabled={!theme}>다음으로</button>
+                <button className="btn-primary" onClick={onNext} disabled={!resolution.trim()}>다음으로</button>
             </div>
         </div>
     );
@@ -354,7 +277,7 @@ const Step5Theme = ({ theme, setTheme, onNext }) => {
 const Step6Sleep = ({ duration, setDuration, targetTime, onNext }) => {
     const sleepOptions = [5.5, 6, 6.5, 7, 7.5, 8];
     const { bedtime, relaxTime } = calculateBedtime(
-        `${targetTime.hours}:${targetTime.minutes} ${targetTime.period}`,
+        `${targetTime.hours}:${targetTime.minutes}`,
         duration
     );
 
@@ -398,13 +321,13 @@ const styles = `
 .onboarding-screen {
     background: linear-gradient(180deg, #F8F7FC 0%, #E8E4F3 100%);
     min-height: 100vh;
-    padding: 24px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }
 .back-button {
     width: 40px; height: 40px; background: white; border-radius: 12px;
-    border: none; cursor: pointer; margin-bottom: 20px;
+    border: none; cursor: pointer; margin-bottom: 12px;
     display: flex; align-items: center; justify-content: center;
 }
 .back-button::before { content: '←'; font-size: 20px; color: var(--color-primary); }
@@ -412,25 +335,64 @@ const styles = `
 .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(139, 127, 220, 0.2); transition: all 0.3s; }
 .dot.active { width: 24px; border-radius: 4px; background: var(--color-primary); }
 
-.time-card { background: white; border: 2px solid var(--color-primary); border-radius: 24px; padding: 40px 32px; margin: 40px 0 20px 0; width: 100%; }
-.time-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
-.time-input { width: 80px; font-size: 48px; font-weight: 700; text-align: center; border: none; outline: none; color: var(--color-text-primary); }
-.am-pm-toggle { display: flex; background: #F0EDF8; border-radius: 100px; padding: 4px; width: fit-content; margin: 0 auto; }
-.am-pm-btn { padding: 12px 32px; border: none; background: transparent; border-radius: 100px; font-size: 16px; font-weight: 600; color: var(--color-text-secondary); cursor: pointer; }
-.am-pm-btn.active { background: var(--color-primary); color: white; }
-.goal-textarea { width: 100%; height: 120px; padding: 20px; border: 2px solid var(--color-primary); border-radius: 16px; resize: none; margin-top: 40px; }
-.suggestion-chips { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
-.suggestion-chip { padding: 18px 20px; background: white; border: 2px solid #E8E4F3; border-radius: 12px; cursor: pointer; text-align: left; }
-.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-.theme-card { background: white; border: 2px solid #E8E4F3; border-radius: 16px; padding: 24px; text-align: center; cursor: pointer; }
+.time-card { background: white; border: 2px solid var(--color-primary); border-radius: 24px; padding: 24px 20px; margin: 20px 0; width: 100%; }
+
+/* New Time Picker Styles */
+.time-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+.time-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.time-display {
+    width: 100px;
+    height: 80px;
+    font-size: 64px;
+    font-family: 'Roboto', 'Inter', sans-serif;
+    font-weight: 500;
+    text-align: center;
+    color: var(--color-text-primary);
+    background: #F8F7FC;
+    border-radius: 16px;
+    line-height: 80px;
+}
+.time-control-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.2s;
+    opacity: 0.6;
+}
+.time-control-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+.time-separator { font-size: 40px; font-weight: 500; color: var(--color-text-secondary); margin-top: 0; }
+
+.goal-textarea { width: 100%; height: 100px; padding: 16px; border: 2px solid var(--color-primary); border-radius: 16px; resize: none; margin-top: 20px; }
+.suggestion-chips { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.suggestion-chip { padding: 14px 16px; background: white; border: 2px solid #E8E4F3; border-radius: 12px; cursor: pointer; text-align: left; font-size: 14px; }
+.theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.theme-card { background: white; border: 2px solid #E8E4F3; border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; }
 .theme-card.selected { border-color: var(--color-primary); background: rgba(139, 127, 220, 0.1); }
-.theme-emoji { font-size: 36px; margin-bottom: 8px; }
-.sleep-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; margin-top: 40px; width: 100%; }
-.sleep-chip { padding: 16px 0; background: white; border: 2px solid #E8E4F3; border-radius: 16px; cursor: pointer; text-align: center; font-weight: 500; transition: all 0.2s; }
+.theme-emoji { font-size: 32px; margin-bottom: 8px; }
+.sleep-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; margin-top: 24px; width: 100%; }
+.sleep-chip { padding: 12px 0; background: white; border: 2px solid #E8E4F3; border-radius: 16px; cursor: pointer; text-align: center; font-weight: 500; transition: all 0.2s; font-size: 14px; }
 .sleep-chip:hover { border-color: var(--color-primary); background: #F8F7FC; }
 .sleep-chip.selected { background: var(--color-primary); color: white; border-color: var(--color-primary); font-weight: 700; box-shadow: 0 4px 12px rgba(139, 127, 220, 0.3); }
-.bedtime-card { background: rgba(139, 127, 220, 0.1); border-radius: 20px; padding: 32px; text-align: center; }
-.bedtime-time { font-size: 40px; font-weight: 700; color: var(--color-primary); margin: 20px 0; }
+.bedtime-card { background: rgba(139, 127, 220, 0.1); border-radius: 20px; padding: 24px; text-align: center; }
+.bedtime-time { font-size: 36px; font-weight: 700; color: var(--color-primary); margin: 16px 0; }
+.bedtime-hint { font-size: 14px; }
 .fade-in { animation: fadeIn 0.5s ease; flex: 1; display: flex; flex-direction: column; }
 `;
 

@@ -37,11 +37,11 @@ const BottomNav = () => {
                     background: white;
                     border-top: 1px solid #E8E4F3;
                     padding: 12px 0;
-                    padding-bottom: calc(12px + var(--safe-area-bottom));
+                    padding-bottom: 24px; /* Fixed padding for safety */
                     display: grid;
                     grid-template-columns: repeat(5, 1fr);
                     box-shadow: 0 -2px 12px rgba(139, 127, 220, 0.08);
-                    z-index: 100;
+                    z-index: 9999; /* High z-index to ensure visibility */
                     max-width: 480px; /* Match app container max-width */
                     margin: 0 auto;
                 }

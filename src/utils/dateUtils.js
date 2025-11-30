@@ -1,26 +1,30 @@
 export const timeToMinutes = (timeStr) => {
-    // "07:00 AM" -> minutes
+    // "07:00" (24h) -> minutes
     if (!timeStr) return 0;
 
-    const [time, period] = timeStr.split(' ');
-    let [hours, minutes] = time.split(':').map(Number);
+    // Check if it has AM/PM (legacy support if needed, but we are switching to 24h)
+    if (timeStr.includes(' ')) {
+        const [time, period] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (period === 'PM' && hours !== 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+    }
 
-    if (period === 'PM' && hours !== 12) hours += 12;
-    if (period === 'AM' && hours === 12) hours = 0;
-
+    const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
 };
 
 export const minutesToTime = (totalMinutes) => {
-    // minutes -> "07:00 AM"
+    // minutes -> "19:00" (24h)
     let hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    const period = hours >= 12 ? 'PM' : 'AM';
 
-    if (hours > 12) hours -= 12;
-    if (hours === 0) hours = 12;
+    // Normalize hours to 0-23
+    hours = hours % 24;
+    if (hours < 0) hours += 24;
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
 
 export const calculateTimeDifference = (current, target) => {
@@ -53,5 +57,10 @@ export const calculateBedtime = (wakeTime, sleepHours) => {
 };
 
 export const getTodayStr = () => {
-    return new Date().toISOString().split('T')[0];
+    // Use local time for date string
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };

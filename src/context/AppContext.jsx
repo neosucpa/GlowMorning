@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { calculateStreak } from '../utils/statsUtils';
+import { getTodayStr } from '../utils/dateUtils';
 
 const AppContext = createContext();
 
@@ -7,10 +9,24 @@ const INITIAL_USER_DATA = {
     targetWakeTime: '05:30 AM',
     timeDifference: 1.5,
     goal: '',
-    morningTheme: null,
+    resolution: '',
     sleepDuration: 7,
     onboardingCompleted: false,
-    completedAt: null
+    completedAt: null,
+    username: '',
+    // Settings
+    alarmEnabled: true,
+    excludeWeekends: false,
+    notifications: {
+        recordReminder: {
+            enabled: false,
+            time: '21:00'
+        },
+        sleepReminder: {
+            enabled: false,
+            minutesBefore: 60 // 1시간 전
+        }
+    }
 };
 
 const INITIAL_APP_STATE = {
@@ -28,17 +44,27 @@ const INITIAL_APP_STATE = {
 export const AppProvider = ({ children }) => {
     // DEV: Clear storage on every load as requested
     // Remove this line in production
-    localStorage.clear();
+    // localStorage.clear();
 
     // Load from LocalStorage or use defaults
     const [userData, setUserData] = useState(() => {
-        const saved = localStorage.getItem('glowmorning_user');
-        return saved ? JSON.parse(saved) : INITIAL_USER_DATA;
+        try {
+            const saved = localStorage.getItem('glowmorning_user');
+            return saved ? { ...INITIAL_USER_DATA, ...JSON.parse(saved) } : INITIAL_USER_DATA;
+        } catch (e) {
+            console.error("Failed to load user data", e);
+            return INITIAL_USER_DATA;
+        }
     });
 
     const [appState, setAppState] = useState(() => {
-        const saved = localStorage.getItem('glowmorning_app_state');
-        return saved ? JSON.parse(saved) : INITIAL_APP_STATE;
+        try {
+            const saved = localStorage.getItem('glowmorning_app_state');
+            return saved ? JSON.parse(saved) : INITIAL_APP_STATE;
+        } catch (e) {
+            console.error("Failed to load app state", e);
+            return INITIAL_APP_STATE;
+        }
     });
 
     // Save to LocalStorage whenever state changes
@@ -71,13 +97,31 @@ export const AppProvider = ({ children }) => {
         setAppState(prev => ({ ...prev, ...newData }));
     };
 
+
+
     // Helper to update records
     const updateRecord = (date, data) => {
-        setAppState(prev => {
-            const newRecords = { ...prev.records };
-            newRecords[date] = { ...(newRecords[date] || {}), ...data };
-            return { ...prev, records: newRecords };
-        });
+        try {
+            setAppState(prev => {
+                const newRecords = { ...prev.records };
+                newRecords[date] = { ...(newRecords[date] || {}), ...data };
+
+                // Recalculate stats
+                const totalDays = Object.values(newRecords).filter(r => r.wake).length;
+                const currentStreak = calculateStreak(newRecords, getTodayStr(), userData.excludeWeekends || false);
+
+                return {
+                    ...prev,
+                    records: newRecords,
+                    totalDays,
+                    currentStreak
+                };
+            });
+        } catch (error) {
+            console.error('Error updating record:', error);
+            // Re-throw to let caller handle it
+            throw error;
+        }
     };
 
     const value = {

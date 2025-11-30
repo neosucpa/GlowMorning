@@ -5,7 +5,6 @@ import Intro from './pages/Intro';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Alarm from './pages/Alarm';
-import Ritual from './pages/Ritual';
 import Pledge from './pages/Pledge';
 import { Records, Stats, Challenge, Settings } from './pages/OtherScreens';
 
@@ -28,7 +27,6 @@ const AppContent = () => {
       <Route path="/pledge" element={<Pledge />} /> {/* Added route for Pledge */}
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/alarm" element={<Alarm />} />
-      <Route path="/ritual" element={<Ritual />} />
       <Route path="/records" element={<Records />} />
       <Route path="/stats" element={<Stats />} />
       <Route path="/challenge" element={<Challenge />} />
